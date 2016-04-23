@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -77,10 +76,7 @@ public class VisualGraphingNew extends javax.swing.JFrame {
             Document document = (Document) builder.build(xmlFile);
             Element rootNode = document.getRootElement();
             List list = rootNode.getChildren("RECORD");
-            List<Node> NodeList = new ArrayList<Node>();
-            HashSet<String> authors = new HashSet<String>();
-            List<News> NodeListNews = new ArrayList<News>();
-            List<String> author = new ArrayList<String>();
+            HashSet<String> authors = new HashSet<>();
 
             for (int i = 0; i < list.size(); i++) {
                 Element node = (Element) list.get(i);
@@ -94,8 +90,6 @@ public class VisualGraphingNew extends javax.swing.JFrame {
                 nn.addAttribute("content", node.getChildText("content"));
                 nn.addAttribute("page", node.getChildText("page"));
                 nn.addAttribute("journalist", node.getChildText("journalist"));
-                NodeList.add(nn);
-                author.add(nn.getAttribute("journalist"));
                 authors.add(nn.getAttribute("journalist"));
             }
 
