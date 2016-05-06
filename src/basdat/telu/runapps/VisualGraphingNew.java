@@ -7,11 +7,8 @@ package basdat.telu.runapps;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.graphstream.graph.Graph;
@@ -34,36 +31,6 @@ public class VisualGraphingNew extends javax.swing.JFrame {
     public VisualGraphingNew() {
         initComponents();
         setLocationRelativeTo(null);
-    }
-
-    public Set<Node> findDuplicates(ArrayList<Node> list) {
-        Set<Node> items = new HashSet<Node>();
-        Set<Node> duplicates = new HashSet<Node>();
-        for (Node item : list) {
-            if (items.contains(item)) {
-                duplicates.add(item);
-            } else {
-                items.add(item);
-            }
-        }
-        return duplicates;
-    }
-
-    public void explore(Node source) {
-        Iterator<? extends Node> k = source.getBreadthFirstIterator();
-
-        while (k.hasNext()) {
-            Node next = k.next();
-            next.setAttribute("ui.class", "marked");
-            sleep();
-        }
-    }
-
-    protected void sleep() {
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-        }
     }
 
     public void GraphingData(String file) {
