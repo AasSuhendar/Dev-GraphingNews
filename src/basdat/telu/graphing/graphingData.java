@@ -7,6 +7,7 @@ package basdat.telu.graphing;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -22,7 +23,7 @@ import org.jdom2.input.SAXBuilder;
  */
 public class graphingData {
 
-    public static void GraphingData(String file) {
+    public void GraphingData(String file) {
         SAXBuilder builder = new SAXBuilder();
         File xmlFile = new File(file);
         Graph graph = new SingleGraph("Graphing");
@@ -32,14 +33,11 @@ public class graphingData {
             Document document = (Document) builder.build(xmlFile);
             Element rootNode = document.getRootElement();
             List list = rootNode.getChildren("RECORD");
+            HashSet<String> authors = new HashSet<>();
 
             for (int i = 0; i < list.size(); i++) {
                 Element node = (Element) list.get(i);
                 graph.addNode(node.getChildText("articleid"));
-
-                for (Node n : graph) {
-                    n.addAttribute("ui.label", n.getId());
-                }
 
                 Node nn = graph.getNode(node.getChildText("articleid"));
 //                nn.addAttribute("ui.label", node.getChildText("title"));
@@ -49,20 +47,39 @@ public class graphingData {
                 nn.addAttribute("content", node.getChildText("content"));
                 nn.addAttribute("page", node.getChildText("page"));
                 nn.addAttribute("journalist", node.getChildText("journalist"));
+                authors.add(nn.getAttribute("journalist"));
             }
-        } catch (IOException io) {
+
+            for (String a : authors) {
+                graph.addNode(a);
+            }
+
+            for (Node node : graph) {
+                if (node.hasAttribute("journalist")) {
+                    String id = node.getId();
+                    String jurnalis = node.getAttribute("journalist");
+                    for (String a : authors) {
+                        if (jurnalis.equalsIgnoreCase(a)) {
+                            graph.addEdge(id + jurnalis, a, id);
+                        }
+                    }
+                }
+
+            }
+            
+            for (Node n : graph) {
+                n.addAttribute("ui.label", n.getId());
+            }
+            
+        } catch (IOException | JDOMException io) {
             System.out.println(io.getMessage());
-        } catch (JDOMException jdomex) {
-            System.out.println(jdomex.getMessage());
         }
-        
-        
-        
         graph.display();
     }
 
     public static void main(String[] args) {
 //        GraphingData("F:\\parserdata\\data_10k_articles.xml");
-        GraphingData("C:\\Users\\Aas Suhendar\\Documents\\NetBeansProjects\\Dev-GraphingNews\\src\\basdat\\telu\\file\\data_10k_articles.xml");
+        graphingData g=new graphingData();
+        g.GraphingData("F:\\parserdata\\new_data.xml");
     }
 }
