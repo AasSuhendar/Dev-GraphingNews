@@ -1,5 +1,9 @@
 # Dev-GraphingNews
 Graphing News use Java
 
-1. Run VisualGraphingNew.java using netbeans
-2. select file with xml format.
+Step running
+1.Open project java in netbeans
+2.Import library support
+3.Run code VisualGraphingNewUpdate.java
+4.Select file in dataset
+5.Click Graphing Button
