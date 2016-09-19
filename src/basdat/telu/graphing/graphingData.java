@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -29,11 +30,20 @@ public class graphingData {
         Graph graph = new SingleGraph("Graphing");
         graph.setAutoCreate(true);
         graph.setStrict(false);
+
+        graph.addNode("b1");
+        graph.addNode("b2");
+        graph.addNode("b3");
+        graph.addNode("b4");
+        graph.addEdge("m1", "b1", "b2");
+        graph.addEdge("m2", "b4", "b3");
+
         try {
             Document document = (Document) builder.build(xmlFile);
             Element rootNode = document.getRootElement();
             List list = rootNode.getChildren("RECORD");
             HashSet<String> authors = new HashSet<>();
+            HashSet<String> media = new HashSet<>();
 
             for (int i = 0; i < list.size(); i++) {
                 Element node = (Element) list.get(i);
@@ -48,12 +58,13 @@ public class graphingData {
                 nn.addAttribute("page", node.getChildText("page"));
                 nn.addAttribute("journalist", node.getChildText("journalist"));
                 authors.add(nn.getAttribute("journalist"));
+//                media.add(nn.getAttribute("medianame"));
             }
 
             for (String a : authors) {
                 graph.addNode(a);
             }
-
+            
             for (Node node : graph) {
                 if (node.hasAttribute("journalist")) {
                     String id = node.getId();
@@ -64,13 +75,17 @@ public class graphingData {
                         }
                     }
                 }
-
             }
-            
+
             for (Node n : graph) {
                 n.addAttribute("ui.label", n.getId());
             }
-            
+
+            for (Edge edge : graph.getEachEdge()) {
+                Node n = edge.getNode1();
+                edge.addAttribute("ui.label", edge.getId());
+            }
+
         } catch (IOException | JDOMException io) {
             System.out.println(io.getMessage());
         }
@@ -79,7 +94,7 @@ public class graphingData {
 
     public static void main(String[] args) {
 //        GraphingData("F:\\parserdata\\data_10k_articles.xml");
-        graphingData g=new graphingData();
+        graphingData g = new graphingData();
         g.GraphingData("F:\\parserdata\\new_data.xml");
     }
 }
